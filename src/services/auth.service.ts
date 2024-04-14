@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import { UserSignInDto } from "../dtos/user/user-signin";
+import { UserSignInDto } from "../dtos/user/user-signin.dto";
 import { Errors } from "../enums/errors.enum";
 import { HttpStatus } from "../enums/http-status.enum";
 import { UserRepository } from "../repositories/user.repository";
-import userModel from '../schema/user.schema'
+import userModel from '../schemas/user.schema'
 import { Hash } from "../utils/hash";
 import { Jwt } from "../utils/jwt";
 import { ServiceData } from "../utils/service-data";

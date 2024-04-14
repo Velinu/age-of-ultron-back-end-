@@ -14,7 +14,7 @@ export class Jwt {
         const accessToken = jwt.sign(
             payload,
             secret,
-            { expiresIn: '300s' }
+            { expiresIn: '1600s' }
         )
 
         return accessToken;
