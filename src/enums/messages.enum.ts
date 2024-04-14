@@ -3,4 +3,6 @@ export enum Messages {
     LOGIN_SUCCESSFULLY = 'Login Successfully',
     RENEW_TOKEN_SUCCESSFULLY = 'Renew Token Success Fully',
 
+    CREATE_EVENT_SUCCESSFULLY = 'Create Event Successfully',
+
 }

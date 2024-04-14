@@ -5,4 +5,6 @@ export enum Errors {
     EMAIL_ALREADY_IN_USE = "Email Already In Use",
     PASSWORD_LENGTH = "Password Must Be 8 Or More Characters Long",
     MISSING_USER_INFORMATIONS = "Can't Create User: Informations Missing",
+
+    EVENT_ALREADY_EXISTS = 'Event Already Exists',
 }
