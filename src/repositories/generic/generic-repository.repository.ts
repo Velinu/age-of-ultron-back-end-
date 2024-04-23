@@ -1,4 +1,4 @@
-import { Document, FilterQuery, Model, UpdateQuery, UpdateWithAggregationPipeline, UpdateWriteOpResult } from "mongoose";
+import { Aggregate, AggregateOptions, Document, FilterQuery, Model, PipelineStage, UpdateQuery, UpdateWithAggregationPipeline, UpdateWriteOpResult } from "mongoose";
 
 export class GenericRepository<T extends Document> {
 
@@ -34,5 +34,14 @@ export class GenericRepository<T extends Document> {
 
     async updateOne(filter: FilterQuery<T>, update: UpdateWithAggregationPipeline | UpdateQuery<T>): Promise<UpdateWriteOpResult> {
         return await this.model.updateOne(filter, update);
+    }
+    async aggregate(pipeline?: PipelineStage[] | undefined, options?: AggregateOptions | undefined): Promise<Aggregate<any[]> | null> {
+        return this.model.aggregate(pipeline, options)
+            .then((res) => {
+                return res;
+            })
+            .catch(() => {
+                return null;
+            })
     }
 }

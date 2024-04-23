@@ -9,8 +9,8 @@ class EventService {
     private readonly repository = new EventRepository();
     private marvelApi = new MarvelApi();
 
-    async create(body: any) {
-        const event = await this.repository.findByEventId(body.id);
+    async create(eventId: number) {
+        const event = await this.repository.findByEventId(eventId);
         if (event) {
             return new ServiceData(
                 HttpStatus.BAD_REQUEST,
@@ -18,7 +18,7 @@ class EventService {
             )
         }
 
-        const eventResult = await this.marvelApi.getEvent(body.id);
+        const eventResult = await this.marvelApi.getEvent(eventId);
 
         if (!eventResult) {
             return new ServiceData(
@@ -34,7 +34,8 @@ class EventService {
                     Messages.CREATE_EVENT_SUCCESSFULLY
                 )
             })
-            .catch(() => {
+            .catch((error) => {
+                console.log(error)
                 return new ServiceData(
                     HttpStatus.INTERNAL_SERVER_ERROR
                 )

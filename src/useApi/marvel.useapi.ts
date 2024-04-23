@@ -13,10 +13,55 @@ export class MarvelApi {
     }
 
     public async getEvent(id: number) {
-        return fetch(this.generateApi(`events/${id}`))
+        return fetch(this.generateApi(`events/${id}`, 'limit=100'))
             .then(async (result: any) => {
-                const res = await result.json();
-                return res.code === 200 ? res.data.results : null;
+                result = await result.json();
+                if (result.code == 200) {
+                    const [characters, stories, creators, series, comics] = await Promise.all([
+                        fetch(this.generateApi(`events/${id}/characters`, 'limit=100')).then((res: any) => res.json()),
+                        fetch(this.generateApi(`events/${id}/stories`, 'limit=100')).then((res: any) => res.json()),
+                        fetch(this.generateApi(`events/${id}/creators`, 'limit=100')).then((res: any) => res.json()),
+                        fetch(this.generateApi(`events/${id}/series`, 'limit=100')).then((res: any) => res.json()),
+                        fetch(this.generateApi(`events/${id}/comics`, 'limit=100')).then((res: any) => res.json()),
+                    ]);
+
+                    let charactersArray: Array<Id> = [];
+                    let storiesArray: Array<Id> = [];
+                    let creatorsArray: Array<Id> = [];
+                    let seriesArray: Array<Id> = [];
+                    let comicsArray: Array<Id> = [];
+
+                    characters.data.results.forEach((character: any) => {
+                        charactersArray.push(new Id(parseInt(character.id)));
+                    });
+
+                    stories.data.results.forEach((storie: any) => {
+                        storiesArray.push(new Id(parseInt(storie.id)));
+                    });
+
+                    creators.data.results.forEach((creator: any) => {
+                        creatorsArray.push(new Id(parseInt(creator.id)));
+                    });
+
+                    series.data.results.forEach((serie: any) => {
+                        seriesArray.push(new Id(parseInt(serie.id)));
+                    });
+
+                    comics.data.results.forEach((comic: any) => {
+                        comicsArray.push(new Id(parseInt(comic.id)));
+                    });
+
+                    result.data.results[0].creators = creatorsArray;
+                    result.data.results[0].characters = charactersArray;
+                    result.data.results[0].stories = storiesArray;
+                    result.data.results[0].series = seriesArray;
+                    result.data.results[0].comics = comicsArray;
+
+                    return result.data.results;
+                }
+
+                return null
+
             })
             .catch((error) => {
                 console.error(error);

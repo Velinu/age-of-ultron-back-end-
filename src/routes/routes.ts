@@ -12,7 +12,7 @@ routes.post('/user/create', userController.create);
 routes.post('/auth/login', authController.signIn);
 routes.get('/auth/renewtoken', authController.renewToken);
 
-routes.post('/events/create', eventController.create);
+routes.get('/events/create/:event', eventController.create);
 routes.post('/events/createcreators', creatorController.create);
 routes.get('/stories/create/:event', storieController.create)
 

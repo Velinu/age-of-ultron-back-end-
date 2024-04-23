@@ -51,124 +51,164 @@ const EventSchema = new Schema({
             required: [true, 'thumbnail.extension']
         }
     },
-    creators: {
-        available: {
-            type: Number,
-            required: [true, 'creators.available']
-        },
-        collectionURI: {
-            type: String,
-            required: [true, 'creators.collectionURI']
-        },
-        items: [
-            {
-                resourceURI: {
-                    type: String,
-                    required: [true, 'creators.items.resourceURI']
-                },
-                name: {
-                    type: String,
-                    required: [true, 'creators.items.name']
-                },
-                role: {
-                    type: String,
-                    required: [true, 'creators.items.role']
-                }
+    creators: [
+        {
+            id: {
+                type: Number,
+                required: [true, 'creators.id']
             }
-        ]
-    },
-    characters: {
-        available: {
-            type: Number,
-            required: [true, 'characters.available']
-        },
-        collectionURI: {
-            type: String,
-            required: [true, 'characters.collectionURI']
-        },
-        items: [
-            {
-                resourceURI: {
-                    type: String,
-                    required: [true, 'characters.items.resourceURI']
-                },
-                name: {
-                    type: String,
-                    required: [true, 'characters.items.name']
-                },
+        }
+    ],
+    characters: [
+        {
+            id: {
+                type: Number,
+                required: [true, 'characters.id']
             }
-        ]
-    },
-    stories: {
-        available: {
-            type: Number,
-            required: [true, 'stories.available']
-        },
-        collectionURI: {
-            type: String,
-            required: [true, 'stories.collectionURI']
-        },
-        items: [
-            {
-                resourceURI: {
-                    type: String,
-                    required: [true, 'stories.items.resourceURI']
-                },
-                name: {
-                    type: String,
-                    required: [true, 'stories.items.name']
-                },
-                type: {
-                    type: String,
-                    required: [true, 'stories.items.type']
-                }
+        }
+    ],
+    series: [
+        {
+            id: {
+                type: Number,
+                required: [true, 'series.id']
             }
-        ]
-    },
-    comics: {
-        available: {
-            type: Number,
-            required: [true, 'comics.available']
-        },
-        collectionURI: {
-            type: String,
-            required: [true, 'comics.collectionURI']
-        },
-        items: [
-            {
-                resourceURI: {
-                    type: String,
-                    required: [true, 'comics.items.resourceURI']
-                },
-                name: {
-                    type: String,
-                    required: [true, 'comics.items.name']
-                },
+        }
+    ],
+    comics: [
+        {
+            id: {
+                type: Number,
+                required: [true, 'comics.id']
             }
-        ]
-    },
-    series: {
-        available: {
-            type: Number,
-            required: [true, 'series.available']
-        },
-        collectionURI: {
-            type: String,
-            required: [true, 'series.collectionURI']
-        },
-        items: [
-            {
-                resourceURI: {
-                    type: String,
-                    required: [true, 'series.items.resourceURI']
-                },
-                name: {
-                    type: String,
-                    required: [true, 'series.items.name']
-                },
+        }
+    ],
+    stories: [
+        {
+            id: {
+                type: Number,
+                required: [true, 'comics.id']
             }
-        ]
-    }
+        }
+    ],
+    // creators: {
+    //     available: {
+    //         type: Number,
+    //         required: [true, 'creators.available']
+    //     },
+    //     collectionURI: {
+    //         type: String,
+    //         required: [true, 'creators.collectionURI']
+    //     },
+    //     items: [
+    //         {
+    //             resourceURI: {
+    //                 type: String,
+    //                 required: [true, 'creators.items.resourceURI']
+    //             },
+    //             name: {
+    //                 type: String,
+    //                 required: [true, 'creators.items.name']
+    //             },
+    //             role: {
+    //                 type: String,
+    //                 required: [true, 'creators.items.role']
+    //             }
+    //         }
+    //     ]
+    // },
+    // characters: {
+    //     available: {
+    //         type: Number,
+    //         required: [true, 'characters.available']
+    //     },
+    //     collectionURI: {
+    //         type: String,
+    //         required: [true, 'characters.collectionURI']
+    //     },
+    //     items: [
+    //         {
+    //             resourceURI: {
+    //                 type: String,
+    //                 required: [true, 'characters.items.resourceURI']
+    //             },
+    //             name: {
+    //                 type: String,
+    //                 required: [true, 'characters.items.name']
+    //             },
+    //         }
+    //     ]
+    // },
+    // stories: {
+    //     available: {
+    //         type: Number,
+    //         required: [true, 'stories.available']
+    //     },
+    //     collectionURI: {
+    //         type: String,
+    //         required: [true, 'stories.collectionURI']
+    //     },
+    //     items: [
+    //         {
+    //             resourceURI: {
+    //                 type: String,
+    //                 required: [true, 'stories.items.resourceURI']
+    //             },
+    //             name: {
+    //                 type: String,
+    //                 required: [true, 'stories.items.name']
+    //             },
+    //             type: {
+    //                 type: String,
+    //                 required: [true, 'stories.items.type']
+    //             }
+    //         }
+    //     ]
+    // },
+    // comics: {
+    //     available: {
+    //         type: Number,
+    //         required: [true, 'comics.available']
+    //     },
+    //     collectionURI: {
+    //         type: String,
+    //         required: [true, 'comics.collectionURI']
+    //     },
+    //     items: [
+    //         {
+    //             resourceURI: {
+    //                 type: String,
+    //                 required: [true, 'comics.items.resourceURI']
+    //             },
+    //             name: {
+    //                 type: String,
+    //                 required: [true, 'comics.items.name']
+    //             },
+    //         }
+    //     ]
+    // },
+    // series: {
+    //     available: {
+    //         type: Number,
+    //         required: [true, 'series.available']
+    //     },
+    //     collectionURI: {
+    //         type: String,
+    //         required: [true, 'series.collectionURI']
+    //     },
+    //     items: [
+    //         {
+    //             resourceURI: {
+    //                 type: String,
+    //                 required: [true, 'series.items.resourceURI']
+    //             },
+    //             name: {
+    //                 type: String,
+    //                 required: [true, 'series.items.name']
+    //             },
+    //         }
+    //     ]
+    // }
 }, {
     timestamps: true,
 });

@@ -3,7 +3,8 @@ import eventService from '../services/event.service'
 
 class EventController {
     async create(req: Request, res: Response) {
-        const result = await eventService.create(req.body);
+        const event = req.params.event;
+        const result = await eventService.create(parseInt(event));
         return res.status(result.statusCode).send(result.metaData);
     }
 }
