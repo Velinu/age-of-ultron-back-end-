@@ -1,6 +1,6 @@
 import { GenericRepository } from "./generic/generic-repository.repository";
 import storieModel from '../schemas/stories.schema'
-import { Creator } from "../interfaces/creator.interface";
+// import { Creator } from "../interfaces/creator.interface";
 import { StoriesDocument } from "../schemas/stories.schema";
 import { Storie } from "../interfaces/stories.interface";
 

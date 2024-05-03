@@ -1,7 +1,8 @@
-import { ComicFullClass } from "../../classes/comic-full.class"
+import { ComicFullClass } from "./comic-full.class"
+import { ComicClass } from "./comic.class"
 
-export class CreateCreatorDto {
-    id?: number
+export class CreatorClass {
+    id: number
     fullName: String
     comics: ComicFullClass
     series: number
@@ -10,13 +11,13 @@ export class CreateCreatorDto {
     detailUrl: String
 
     constructor(
+        id: number,
         fullName: String,
         series: number,
         stories: number,
         events: number,
         detailUrl: String,
-        comics: ComicFullClass,
-        id?: number,
+        comics: ComicFullClass
     ) {
         this.id = id;
         this.fullName = fullName;

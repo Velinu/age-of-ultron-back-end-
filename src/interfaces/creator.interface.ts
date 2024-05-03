@@ -1,24 +1,17 @@
-interface Urls {
-    type: String
-    url: String
-}
+import { ComicClass } from "../classes/comic.class"
 
-interface Thumbnail {
-    path: string,
-    extension: string
-}
-
-export interface Creator {
+export interface CreatorInterface {
+    _id: string
     id: number
-    firstName: String
-    middleName?: String
-    lastName: String
-    suffix?: String
     fullName: String
-    modified: Date
-    thumbnail: Array<Thumbnail>
-    resourceURI: String
-    urls: Array<Urls>
+    comics?: {
+        available: Number
+        comic?: Array<ComicClass>
+    }
+    series?: number
+    stories?: number
+    events?: number
+    detailUrl: String
     createdAt: Date
     updatedAt: Date
 }

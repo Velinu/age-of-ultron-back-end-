@@ -1,7 +1,12 @@
+import { ComicClass } from "../classes/comic.class";
+import { CreatorClass } from "../classes/creator.class";
 import { Id } from "../classes/id.class";
-import { Creator } from "../interfaces/creator.interface";
+import { CreatorInterface } from "../interfaces/creator.interface";
 import { Storie } from "../interfaces/stories.interface";
 import { Md5 } from "../utils/md5";
+import { Messages } from "../enums/messages.enum";
+import { ComicFullClass } from "../classes/comic-full.class";
+import { ComicsClass } from "../classes/comics.class";
 
 export class MarvelApi {
     private md5 = new Md5();
@@ -12,56 +17,104 @@ export class MarvelApi {
         return url
     }
 
-    public async getEvent(id: number) {
-        return fetch(this.generateApi(`events/${id}`, 'limit=100'))
+    public async getCreatorsByEvent(eventId: number) {
+        try {
+            return await fetch(this.generateApi(`events/${eventId}/creators`, 'limit=100'))
+                .then(async (result: any): Promise<CreatorClass[] | null> => {
+                    result = await result.json();
+                    if (result.code === 200) {
+                        const data = result.data.results;
+
+                        const creatorsArray = new Array<CreatorClass>
+
+                        for (const creator of data) {
+                            const comicsArray = new Array<ComicClass>
+                            let detailUrl = '';
+
+                            if (creator.urls.length > 0) {
+                                for (let j = 0; creator.urls.length - 1; j++) {
+                                    if (creator.urls[j].type) {
+                                        if (creator.urls[j].type == 'datail') {
+                                            detailUrl = data.urls[j].url;
+                                        }
+                                    }
+                                };
+                            }
+
+                            creator.comics.items.forEach((el: any) => {
+                                let url = el.resourceURI.split('/');
+                                let id: string = url[url.length - 1];
+                                comicsArray.push(
+                                    new ComicClass(
+                                        parseInt(id),
+                                        el.name
+                                    )
+                                )
+                            })
+
+                            creatorsArray.push(
+                                new CreatorClass(
+                                    creator.id,
+                                    creator.fullName,
+                                    creator.series.available,
+                                    creator.stories.available,
+                                    creator.events.available,
+                                    detailUrl,
+                                    new ComicFullClass(creator.comics.available, comicsArray)
+                                )
+                            )
+                        }
+
+                        return creatorsArray;
+                    }
+                    return null;
+                })
+        } catch (error) {
+            console.log(error);
+            return null;
+        }
+    }
+
+    async getComicsByEvent(eventId: number) {
+        try {
+            return await fetch(this.generateApi(`events/${eventId}/comics`, 'limit=100'))
+                .then(async (result: any): Promise<ComicsClass[] | null> => {
+                    result = await result.json();
+                    if (result.code == 200) {
+                        const data = result.data.results;
+                        const comicsArray = new Array<ComicsClass>;
+
+                        for (const comic of data) {
+
+                            comicsArray.push(
+                                new ComicsClass(
+                                    comic.id,
+                                    comic.title,
+                                    comic.description == '' ? 'none' : comic.description,
+                                    comic.dates[0].date,
+                                    comic.thumbnail.path,
+                                    comic.pageCount,
+                                )
+                            )
+                        }
+
+                        return comicsArray;
+                    }
+
+
+                    return null
+                })
+        } catch (error) {
+            console.log(error);
+            return null;
+        }
+    }
+
+    public async getCharactersByEvent(id: number) {
+        return fetch(this.generateApi(`events/${id}/characters`))
             .then(async (result: any) => {
-                result = await result.json();
-                if (result.code == 200) {
-                    const [characters, stories, creators, series, comics] = await Promise.all([
-                        fetch(this.generateApi(`events/${id}/characters`, 'limit=100')).then((res: any) => res.json()),
-                        fetch(this.generateApi(`events/${id}/stories`, 'limit=100')).then((res: any) => res.json()),
-                        fetch(this.generateApi(`events/${id}/creators`, 'limit=100')).then((res: any) => res.json()),
-                        fetch(this.generateApi(`events/${id}/series`, 'limit=100')).then((res: any) => res.json()),
-                        fetch(this.generateApi(`events/${id}/comics`, 'limit=100')).then((res: any) => res.json()),
-                    ]);
-
-                    let charactersArray: Array<Id> = [];
-                    let storiesArray: Array<Id> = [];
-                    let creatorsArray: Array<Id> = [];
-                    let seriesArray: Array<Id> = [];
-                    let comicsArray: Array<Id> = [];
-
-                    characters.data.results.forEach((character: any) => {
-                        charactersArray.push(new Id(parseInt(character.id)));
-                    });
-
-                    stories.data.results.forEach((storie: any) => {
-                        storiesArray.push(new Id(parseInt(storie.id)));
-                    });
-
-                    creators.data.results.forEach((creator: any) => {
-                        creatorsArray.push(new Id(parseInt(creator.id)));
-                    });
-
-                    series.data.results.forEach((serie: any) => {
-                        seriesArray.push(new Id(parseInt(serie.id)));
-                    });
-
-                    comics.data.results.forEach((comic: any) => {
-                        comicsArray.push(new Id(parseInt(comic.id)));
-                    });
-
-                    result.data.results[0].creators = creatorsArray;
-                    result.data.results[0].characters = charactersArray;
-                    result.data.results[0].stories = storiesArray;
-                    result.data.results[0].series = seriesArray;
-                    result.data.results[0].comics = comicsArray;
-
-                    return result.data.results;
-                }
-
-                return null
-
+                const res = await result.json();
+                return res.code === 200 ? res.data.results : null;
             })
             .catch((error) => {
                 console.error(error);
@@ -69,117 +122,41 @@ export class MarvelApi {
             })
     }
 
-    public async getStoriesByEvent(eventId: number) {
-        try {
-            return fetch(this.generateApi(`events/${eventId}/stories`, 'limit=100'))
-                .then(async (result: any): Promise<Array<Storie>> => {
-                    result = await result.json();
-                    result.data.results.forEach((el: any) => {
-                        let creatorsArray: Array<Id> = [];
-                        if (el.creators.items) {
-                            el.creators.items.forEach((el: any) => {
-                                let url = el.resourceURI.split('/');
-                                let id: string = url[url.length - 1];
-                                creatorsArray.push(new Id(parseInt(id)));
-                            })
-
-                            el.creators = creatorsArray;
-                        } else {
-                            el.creators = []
-                        }
-                    });
-
-                    result.data.results.forEach((el: any) => {
-                        let charactersArray: Array<Id> = [];
-                        if (el.characters.items) {
-                            el.characters.items.forEach((el: any) => {
-                                let url = el.resourceURI.split('/');
-                                let id: string = url[url.length - 1];
-                                charactersArray.push(new Id(parseInt(id)));
-                            })
-
-                            el.characters = charactersArray;
-                        } else {
-                            el.characters = []
-                        }
-                    });
-
-                    result.data.results.forEach((el: any) => {
-                        let seriesArray: Array<Id> = [];
-                        if (el.series.items) {
-                            el.series.items.forEach((el: any) => {
-                                let url = el.resourceURI.split('/');
-                                let id: string = url[url.length - 1];
-                                seriesArray.push(new Id(parseInt(id)));
-                            })
-
-                            el.series = seriesArray;
-                        } else {
-                            el.series = []
-                        }
-                    });
-
-                    result.data.results.forEach((el: any) => {
-                        let comicsArray: Array<Id> = [];
-                        if (el.comics.items) {
-                            el.comics.items.forEach((el: any) => {
-                                let url = el.resourceURI.split('/');
-                                let id: string = url[url.length - 1];
-                                comicsArray.push(new Id(parseInt(id)));
-                            })
-
-                            el.comics = comicsArray;
-                        } else {
-                            el.comics = []
-                        }
-                    });
-
-                    result.data.results.forEach((el: any) => {
-                        let eventsArray: Array<Id> = [];
-                        if (el.events.items) {
-                            el.events.items.forEach((el: any) => {
-                                let url = el.resourceURI.split('/');
-                                let id: string = url[url.length - 1];
-                                eventsArray.push(new Id(parseInt(id)));
-                            })
-
-                            el.events = eventsArray;
-                        } else {
-                            el.events = []
-                        }
-                    });
-
-                    return result.data.results;
-                })
-        } catch (error) {
-            console.log(error);
-            return null;
-        }
+    public async getComicsByCharacter(id: number) {
+        return fetch(this.generateApi(`characters/${id}/comics`))
+            .then(async (result: any) => {
+                const res = await result.json();
+                return res.code === 200 ? res.data.results : null;
+            })
+            .catch((error) => {
+                console.error(error)
+                return null
+            })
     }
 
-    public async getCreatorsByEvent(eventId: number) {
-        try {
-            return fetch(this.generateApi(`events/${eventId}/creators`, 'limit=100'))
-                .then(async (result: any): Promise<Creator[]> => {
-                    const res = await result.json();
-                    return res.code === 200 ? res.data.results : null;
-                })
-        } catch (error) {
-            console.log(error);
-            return null;
-        }
+    public async getCharacterById(id: number) {
+        return fetch(this.generateApi(`characters/${id}`))
+            .then(async (result: any) => {
+                const res = await result.json();
+                return res.code === 200 ? res.data.results : null
+            })
+            .catch((error) => {
+                console.error(error)
+                return null
+            })
     }
 
-    public async getCreatorsByStorie(storieId: number) {
-        try {
-            return fetch(this.generateApi(`stories/${storieId}/creators`, 'limit=100'))
-                .then(async (result: any): Promise<Creator[]> => {
-                    const res = await result.json();
-                    return res.code === 200 ? res.data.results : null;
-                })
-        } catch (error) {
-            console.log(error);
-            return null;
-        }
+    public async getAllCharacters() {
+        return fetch(this.generateApi(`characters`))
+            .then(async (result: any) => {
+                const res = await result.json();
+                return res.code === 200 ? res.data.results : null
+            })
+            .catch((error) => {
+                console.error(error)
+                return null
+            })
     }
+
+
 }

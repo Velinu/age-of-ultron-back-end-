@@ -1,4 +1,4 @@
-import { Aggregate, AggregateOptions, Document, FilterQuery, Model, PipelineStage, UpdateQuery, UpdateWithAggregationPipeline, UpdateWriteOpResult } from "mongoose";
+import { Aggregate, AggregateOptions, Document, FilterQuery, Model, MongooseBaseQueryOptions, PipelineStage, ProjectionType, UpdateQuery, UpdateWithAggregationPipeline, UpdateWriteOpResult } from "mongoose";
 
 export class GenericRepository<T extends Document> {
 
@@ -8,12 +8,16 @@ export class GenericRepository<T extends Document> {
         return await this.model.countDocuments(filter);
     }
 
+    async delete(filter?: FilterQuery<T>) {
+        return this.model.deleteOne(filter);
+    }
+
     async create(data: Partial<T>): Promise<T> {
         return await this.model.create(data);
     }
 
-    async find(filter: FilterQuery<T>): Promise<T[] | null> {
-        return await this.model.find(filter);
+    async find(filter: FilterQuery<T>, projection?: ProjectionType<T> | null | undefined): Promise<T[] | null> {
+        return await this.model.find(filter, projection);
     }
 
     async findOne(filter: FilterQuery<T>): Promise<T | null> {
@@ -32,6 +36,10 @@ export class GenericRepository<T extends Document> {
         return await this.model.findByIdAndDelete(id);
     }
 
+    async deleteOne(filter: FilterQuery<T>, update: UpdateWithAggregationPipeline | UpdateQuery<T>) {
+        return await this.model.deleteOne(filter, update);
+    }
+
     async updateOne(filter: FilterQuery<T>, update: UpdateWithAggregationPipeline | UpdateQuery<T>): Promise<UpdateWriteOpResult> {
         return await this.model.updateOne(filter, update);
     }
@@ -43,5 +51,33 @@ export class GenericRepository<T extends Document> {
             .catch(() => {
                 return null;
             })
+    }
+
+    async insertMany(docs: T[]) {
+        return this.model.insertMany(docs)
+            .then((res) => {
+                return res;
+            })
+            .catch(() => {
+                return null;
+            })
+    }
+
+    async findMostComics(): Promise<T | null> {
+        return await this.model.findOne({})
+            .sort({ 'comics.available': -1 })
+            .exec()
+    }
+
+    async findWithMostEvents(): Promise<T | null> {
+        return await this.model.findOne({})
+            .sort({ 'events.available': -1 })
+            .exec()
+    }
+
+    async findWithMostSeries(): Promise<T | null> {
+        return await this.model.findOne({})
+            .sort({ 'series.available': -1 })
+            .exec()
     }
 }

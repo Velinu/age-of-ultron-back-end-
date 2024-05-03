@@ -11,22 +11,22 @@ class StorieService {
     private marvelApi = new MarvelApi();
 
     async create(eventId: number) {
-        const stories = await this.marvelApi.getStoriesByEvent(eventId);
+        // const stories = await this.marvelApi.getStoriesByEvent(eventId);
 
-        if (stories) {
-            console.log(stories[0])
-            console.log(stories[1])
-            stories.forEach(async (storie) => {
-                const exists = await this.repository.findByStorieId(storie.id);
-                if (exists == null) {
-                    this.repository.create(storie);
-                }
-            })
+        // if (stories) {
+        //     console.log(stories[0])
+        //     console.log(stories[1])
+        //     stories.forEach(async (storie) => {
+        //         const exists = await this.repository.findByStorieId(storie.id);
+        //         if (exists == null) {
+        //             this.repository.create(storie);
+        //         }
+        //     })
 
-            return new ServiceData(
-                HttpStatus.OK
-            )
-        }
+        //     return new ServiceData(
+        //         HttpStatus.OK
+        //     )
+        // }
 
         return new ServiceData(
             HttpStatus.NOT_FOUND

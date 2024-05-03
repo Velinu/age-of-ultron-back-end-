@@ -10,36 +10,40 @@ class EventService {
     private marvelApi = new MarvelApi();
 
     async create(eventId: number) {
-        const event = await this.repository.findByEventId(eventId);
-        if (event) {
-            return new ServiceData(
-                HttpStatus.BAD_REQUEST,
-                Errors.EVENT_ALREADY_EXISTS
-            )
-        }
+        // const event = await this.repository.findByEventId(eventId);
+        // if (event) {
+        //     return new ServiceData(
+        //         HttpStatus.BAD_REQUEST,
+        //         Errors.EVENT_ALREADY_EXISTS
+        //     )
+        // }
 
-        const eventResult = await this.marvelApi.getEvent(eventId);
+        // // const eventResult = await this.marvelApi.getEvent(eventId);
 
-        if (!eventResult) {
-            return new ServiceData(
-                HttpStatus.NOT_FOUND
-            )
-        }
+        // if (!eventResult) {
+        //     return new ServiceData(
+        //         HttpStatus.NOT_FOUND
+        //     )
+        // }
 
-        return this.repository.create(eventResult)
-            .then(() => {
+        // return this.repository.create(eventResult)
+        //     .then(() => {
 
-                return new ServiceData(
-                    HttpStatus.OK,
-                    Messages.CREATE_EVENT_SUCCESSFULLY
-                )
-            })
-            .catch((error) => {
-                console.log(error)
-                return new ServiceData(
-                    HttpStatus.INTERNAL_SERVER_ERROR
-                )
-            })
+        //         return new ServiceData(
+        //             HttpStatus.OK,
+        //             Messages.CREATE_EVENT_SUCCESSFULLY
+        //         )
+        //     })
+        //     .catch((error) => {
+        //         console.log(error)
+        //         return new ServiceData(
+        //             HttpStatus.INTERNAL_SERVER_ERROR
+        //         )
+        //     })
+
+        return new ServiceData(
+            HttpStatus.OK
+        )
     }
 
 }
