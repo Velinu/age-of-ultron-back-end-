@@ -19,6 +19,8 @@
     "@types/jsonwebtoken": "^9.0.6",
     "@types/md5": "^2.3.5",
     "@types/supertest": "^6.0.2",
+    "@types/swagger-jsdoc": "^6.0.4",
+    "@types/swagger-ui-express": "^4.1.6",
     "@types/validator": "^13.11.9",
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.6",
@@ -30,6 +32,8 @@
     "md5": "^2.3.0",
     "mongoose": "^8.2.2",
     "supertest": "^7.0.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.0",
     "ts-jest": "^29.1.2",
     "validator": "^13.11.0"
   },

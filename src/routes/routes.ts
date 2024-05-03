@@ -8,10 +8,99 @@ import characterController from '../controllers/character.controller';
 const routes = Router();
 
 routes.get('/events/create/:event', eventController.create);
-routes.get('/events/creators/create/:eventId', creatorController.createFromApi);
-routes.get('/events/comics/create/:eventid', comicController.createFromApi);
-routes.get('/stories/create/:eventId', storieController.create)
 
+/**
+ * @swagger
+ * /events/creators/create/{:eventId}:
+ *  get:
+ *      tags:
+ *          - Creators
+ *      description: Popular banco com os Creators
+ *      produces:
+ *          - application/json
+ *      parameters:
+ *          - in: path
+ *            name: eventId
+ *            required: true
+ *      responses:
+ *          200:
+ *              description: Popula o banco com os Creators
+ *          400:
+ *              description: eventId inválido
+ * 
+ */
+routes.get('/events/creators/create/:eventId', creatorController.createFromApi);
+
+/**
+ * @swagger
+ * /events/comics/create/{:eventId}:
+ *  get:
+ *      tags:
+ *          - Comics
+ *      description: Popular banco com as Comics
+ *      produces:
+ *          - application/json
+ *      parameters:
+ *          - in: path
+ *            name: eventId
+ *            required: true
+ *      responses:
+ *          200:
+ *              description: Popula o banco com as Comics
+ *          400:
+ *              description: eventId inválido
+ * 
+ */
+routes.get('/events/comics/create/:eventid', comicController.createFromApi);
+
+/**
+ * @swagger
+ * /events/stories/create/{:eventId}:
+ *  get:
+ *      tags:
+ *          - Stories
+ *      description: Popular banco com as Stories
+ *      produces:
+ *          - application/json
+ *      parameters:
+ *          - in: path
+ *            name: eventId
+ *            required: true
+ *      responses:
+ *          200:
+ *              description: Popula o banco com as Stories
+ *          400:
+ *              description: eventId inválido
+ * 
+ */
+routes.get('/events/stories/create/:eventId', storieController.create)
+
+
+/**
+ * @swagger
+ * /comics/create:
+ *  post:
+ *      tags:
+ *          - Comics
+ *      description: Popular banco com as Stories
+ *      produces:
+ *          - application/json
+ *      parameters:
+ *          - name: comic
+ *            description: Comic to be created
+ *            in: body
+ *            required: true
+ *            schema:
+ *              $ref: '#/components/schemas/Comic'
+ *      responses:
+ *          200:
+ *              description: Comic criada com sucesso
+ *          400:
+ *              description: |
+ *                  Solicitação inválida
+ *                  - Id da api já existente no banco de dados
+ *                  - Informações incompletas
+ */
 
 routes.post('/comics/create', comicController.create);
 routes.get('/comics/get/:id', comicController.getComicByIds);
