@@ -11,7 +11,7 @@ routes.get('/events/create/:event', eventController.create);
 
 /**
  * @swagger
- * /events/creators/create/{:eventId}:
+ * /events/creators/create/{eventId}:
  *  get:
  *      tags:
  *          - Creators
@@ -33,7 +33,7 @@ routes.get('/events/creators/create/:eventId', creatorController.createFromApi);
 
 /**
  * @swagger
- * /events/comics/create/{:eventId}:
+ * /events/comics/create/{eventId}:
  *  get:
  *      tags:
  *          - Comics
@@ -55,7 +55,7 @@ routes.get('/events/comics/create/:eventid', comicController.createFromApi);
 
 /**
  * @swagger
- * /events/stories/create/{:eventId}:
+ * /events/stories/create/{eventId}:
  *  get:
  *      tags:
  *          - Stories
@@ -101,10 +101,86 @@ routes.get('/events/stories/create/:eventId', storieController.create)
  *                  - Id da api já existente no banco de dados
  *                  - Informações incompletas
  */
-
 routes.post('/comics/create', comicController.create);
+
+/**
+ * @swagger
+ * /comics/get/{id}:
+ *  get:
+ *      tags:
+ *          - Comics
+ *      description: Encontrar comic pelo id da api ou id do mongo
+ *      produces:
+ *          - application/json
+ *      parameters:
+ *          - in: path
+ *            name: id
+ *            required: true
+ *      responses:
+ *          200:
+ *              description: Comic encontrada
+ *          404:
+ *              description: Comic não encontrada
+ * 
+ */
 routes.get('/comics/get/:id', comicController.getComicByIds);
+
+/**
+ * @swagger
+ * /comics/update:
+ *  put:
+ *      tags:
+ *          - Comics
+ *      description: Atualizar uma comic
+ *      produces:
+ *          - application/json
+ *      parameters:
+ *          - name: updatecomic
+ *            description: Comic e campos a serem atualizados
+ *            in: body
+ *            required: true
+ *            schema:
+ *              $ref: '#/components/schemas/UpdateComic'
+ *      responses:
+ *          200:
+ *              description: Comic atualizada com sucesso
+ *          400:
+ *              description: |
+ *                  Solicitação inválida
+ *                  - Comic não encontrada
+ *                  - Descrição incorreta
+ *                  - Título incorreto
+ *          409:
+ *              description: O id da api da comic já está em uso
+ *          500:
+ *              description: Não foi possível atualizar a comic
+ */
 routes.put('/comics/update', comicController.updateComicById);
+
+/**
+ * @swagger
+ * /comics/delete:
+ *  delete:
+ *      tags:
+ *          - Comics
+ *      description: Deletar uma comic
+ *      produces:
+ *          - application/json
+ *      parameters:
+ *          - name: deletecomic
+ *            description: Id da comic
+ *            in: body
+ *            required: true
+ *            schema:
+ *              $ref: '#/components/schemas/DeleteComic'
+ *      responses:
+ *          200:
+ *              description: Comic deletada com sucesso
+ *          404:
+ *              description: Comic não encontrada
+ *          500:
+ *              description: Não foi possível deletar a comic
+ */
 routes.delete('/comics/delete', comicController.deleteComic);
 routes.get('/comics/getnames', comicController.getNameOffAllComics);
 routes.get('/comics/highestpages', comicController.getComicHighestNumberOfPages);

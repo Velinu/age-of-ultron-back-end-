@@ -26,6 +26,61 @@
                 "type": "integer",
                 "example": 32
             }
-        }
+        },
+        "required": [
+            "title",
+            "description",
+            "publication",
+            "thumbnail",
+            "pageCount"
+        ]
+    },
+    "UpdateComic": {
+        "type": "object",
+        "properties": {
+            "_id": {
+                "type": "string",
+                "example": "663005a916db14312446c3df"
+            },
+            "id": {
+                "type": "integer",
+                "example": 1
+            },
+            "title": {
+                "type": "string",
+                "example": "Comic title"
+            },
+            "description": {
+                "type": "string",
+                "example": "Comic Description"
+            },
+            "publication": {
+                "type": "string",
+                "example": "2024-05-03T05:16:21.009Z"
+            },
+            "thumbnail": {
+                "type": "string",
+                "example": "http://i.annihil.us/u/prod/marvel/i/mg/7/70/5159b4df9e785.jpg"
+            },
+            "pageCount": {
+                "type": "integer",
+                "example": 32
+            }
+        },
+        "required": [
+            "_id"
+        ]
+    },
+    "DeleteComic": {
+        "type": "object",
+        "properties": {
+            "id": {
+                "type": "string",
+                "description": "Pode ser tanto o id de api da comic quanto id da comic do mongodb"
+            }
+        },
+        "required": [
+            "id"
+        ]
     }
 }
