@@ -12,29 +12,38 @@ class CharacterService {
     private marvelApi = new MarvelApi();
 
     async create(id: number) {
-
         const charactersResult = await this.marvelApi.getCharactersByEvent(id);
-        if (!charactersResult) {
+        this.standardizeData.standardize(charactersResult)
+
+        if (charactersResult) {
+            charactersResult.forEach(async (character: any) => {
+                return this.repository.findByCharacterId(character.id)
+                    .then((res) => {
+                        if (res) { return }
+                        try {
+                            this.repository.create(character)
+                        } catch (error) {
+                            console.error(error)
+                        }
+                    })
+                    .catch((error) => {
+                        console.error(error)
+                    })
+            })
+
             return new ServiceData(
-                HttpStatus.NOT_FOUND
+                HttpStatus.OK,
+                Messages.CREATE_CHARACTERS_SUCCESSFULLY
             )
         }
 
-        this.standardizeData.standardize(charactersResult)
-
-        charactersResult.forEach(async (e: any) => {
-            await this.repository.create(charactersResult)
-                .catch(e => { return null })
-        })
-
         return new ServiceData(
-            HttpStatus.OK,
-            Messages.CREATE_CHARACTERS_SUCCESSFULLY
+            HttpStatus.BAD_REQUEST
         )
     }
 
     async getCharacterById(id: number) {
-        return await this.marvelApi.getCharacterById(id)
+        return await this.repository.findByCharacterId(id)
             .then((e: any) => {
                 if (e.length === 0) {
                     return new ServiceData(
@@ -56,7 +65,7 @@ class CharacterService {
     }
 
     async getAllCharacters() {
-        return await this.marvelApi.getAllCharacters()
+        return await this.repository.getAllCharacters()
             .then((e: any) => {
                 if (e.length === 0) {
                     return new ServiceData(
@@ -69,7 +78,7 @@ class CharacterService {
                     e
                 )
             })
-            .catch((e) => {
+            .catch((e: any) => {
                 return new ServiceData(
                     HttpStatus.BAD_REQUEST,
                     Errors.NO_CHARACTERS_FOUND
@@ -82,19 +91,28 @@ class CharacterService {
 
         if (missingFields.length > 0) {
             return new ServiceData(
-                HttpStatus.CREATED,
+                HttpStatus.BAD_REQUEST,
                 Errors.MISSING_FIELDS + missingFields
             )
         }
 
+        if (data.id) {
+            const exists = await this.repository.findByCharacterId(data.id);
+            if (exists) {
+                return new ServiceData(
+                    HttpStatus.BAD_REQUEST,
+                )
+            }
+        }
         return await this.repository.create(data)
-            .then((e: any) => {
+            .then(() => {
                 return new ServiceData(
                     HttpStatus.CREATED,
                     Messages.CREATE_CHARACTERS_SUCCESSFULLY
                 )
             })
             .catch((e: any) => {
+                console.log(e)
                 return new ServiceData(
                     HttpStatus.BAD_REQUEST,
                     Errors.POST_CHARACTER
@@ -109,7 +127,7 @@ class CharacterService {
 
         if (missingFields.length > 0) {
             return new ServiceData(
-                HttpStatus.CREATED,
+                HttpStatus.BAD_REQUEST,
                 Errors.MISSING_FIELDS + missingFields
             )
         }
@@ -229,6 +247,8 @@ class CharacterService {
                 )
             })
     }
+
+    
 
 }
 
