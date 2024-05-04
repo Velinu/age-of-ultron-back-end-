@@ -9,15 +9,24 @@ import { MarvelApi } from "../useApi/marvel.useapi";
 import { ServiceData } from "../utils/service-data";
 import { ValidateFields } from "../utils/validate-fields";
 
-class ComicService {
-    private readonly repository = new ComicRepository();
-    private marvelApi = new MarvelApi();
-    private validator = new ValidateFields();
+export class ComicService {
+    private readonly repository;
+    private marvelApi;
+    private validator;
+    constructor(
+        repository: ComicRepository,
+        marvelApi: MarvelApi,
+        validator: ValidateFields,
+    ) {
+        this.repository = repository;
+        this.marvelApi = marvelApi;
+        this.validator = validator
+    }
 
     async createFromApi(eventId: number) {
         let comics = await this.marvelApi.getComicsByEvent(eventId);
 
-        if (comics) {
+        if (comics !== null) {
             comics.forEach(async (comic) => {
                 return this.repository.findByComicId(comic.id)
                     .then((res) => {
@@ -205,7 +214,7 @@ class ComicService {
         const comics = await this.repository.findAllComics();
         let highest: number;
 
-        if (comics) {
+        if (comics !== null) {
             highest = comics[0].pageCount;
             comics.forEach((el) => {
                 if (el.pageCount > highest) {
@@ -232,4 +241,4 @@ class ComicService {
 
 }
 
-export default new ComicService();
+export default new ComicService(new ComicRepository, new MarvelApi(), new ValidateFields);

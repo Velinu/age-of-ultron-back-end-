@@ -35,6 +35,14 @@
             "pageCount"
         ]
     },
+    "ComicResponse": {
+        "type": "object",
+        "properties": {
+            "message": {
+                "type": "string"
+            }
+        }
+    },
     "UpdateComic": {
         "type": "object",
         "properties": {
@@ -77,6 +85,118 @@
             "id": {
                 "type": "string",
                 "description": "Pode ser tanto o id de api da comic quanto id da comic do mongodb"
+            }
+        },
+        "required": [
+            "id"
+        ]
+    },
+    "Creator": {
+        "type": "object",
+        "properties": {
+            "id": {
+                "type": "integer",
+                "example": 34
+            },
+            "fullName": {
+                "type": "string",
+                "example": "Creator Full Name"
+            },
+            "comics": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "type": "integer",
+                            "example": 234
+                        },
+                        "name": {
+                            "type": "string",
+                            "example": "Comic Name"
+                        }
+                    }
+                }
+            },
+            "series": {
+                "type": "integer",
+                "example": 200
+            },
+            "stories": {
+                "type": "integer",
+                "example": 145
+            },
+            "events": {
+                "type": "integer",
+                "example": 4
+            },
+            "detail": {
+                "type": "string",
+                "example": "https://detailurl.com"
+            }
+        },
+        "required": [
+            "fullName"
+        ]
+    },
+    "UpdateCreator": {
+        "type": "object",
+        "properties": {
+            "_id": {
+                "type": "string",
+                "example": "663005a916db14312446c3df"
+            },
+            "id": {
+                "type": "integer",
+                "example": 34
+            },
+            "fullName": {
+                "type": "string",
+                "example": "Creator Full Name"
+            },
+            "comics": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "type": "integer",
+                            "example": 234
+                        },
+                        "name": {
+                            "type": "string",
+                            "example": "Comic Name"
+                        }
+                    }
+                }
+            },
+            "series": {
+                "type": "integer",
+                "example": 200
+            },
+            "stories": {
+                "type": "integer",
+                "example": 145
+            },
+            "events": {
+                "type": "integer",
+                "example": 4
+            },
+            "detail": {
+                "type": "string",
+                "example": "https://detailurl.com"
+            }
+        },
+        "required": [
+            "_id"
+        ]
+    },
+    "DeleteCreator": {
+        "type": "object",
+        "properties": {
+            "id": {
+                "type": "string",
+                "description": "Pode ser tanto o id de api da comic quanto id do creator do mongodb"
             }
         },
         "required": [

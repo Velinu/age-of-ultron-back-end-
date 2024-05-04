@@ -47,6 +47,8 @@ routes.get('/events/creators/create/:eventId', creatorController.createFromApi);
  *      responses:
  *          200:
  *              description: Popula o banco com as Comics
+ *              schema:
+ *                  $ref: '#/components/schemas/ComicResponse'
  *          400:
  *              description: eventId inválido
  * 
@@ -55,53 +57,21 @@ routes.get('/events/comics/create/:eventid', comicController.createFromApi);
 
 /**
  * @swagger
- * /events/stories/create/{eventId}:
+ * /comics/highestpages:
  *  get:
  *      tags:
- *          - Stories
- *      description: Popular banco com as Stories
+ *          - Comics
+ *      description: Pegar a comic com maior número de páginas. Retorna 1 ou mais comics caso exista mais de uma com o maior número de páginas
  *      produces:
  *          - application/json
- *      parameters:
- *          - in: path
- *            name: eventId
- *            required: true
  *      responses:
  *          200:
- *              description: Popula o banco com as Stories
- *          400:
- *              description: eventId inválido
+ *              description: Comic com maior número de páginas
+ *          404:
+ *              description: Nenhuma comic encontrada
  * 
  */
-routes.get('/events/stories/create/:eventId', storieController.create)
-
-
-/**
- * @swagger
- * /comics/create:
- *  post:
- *      tags:
- *          - Comics
- *      description: Popular banco com as Stories
- *      produces:
- *          - application/json
- *      parameters:
- *          - name: comic
- *            description: Comic to be created
- *            in: body
- *            required: true
- *            schema:
- *              $ref: '#/components/schemas/Comic'
- *      responses:
- *          200:
- *              description: Comic criada com sucesso
- *          400:
- *              description: |
- *                  Solicitação inválida
- *                  - Id da api já existente no banco de dados
- *                  - Informações incompletas
- */
-routes.post('/comics/create', comicController.create);
+routes.get('/comics/highestpages', comicController.getComicHighestNumberOfPages);
 
 /**
  * @swagger
@@ -124,6 +94,51 @@ routes.post('/comics/create', comicController.create);
  * 
  */
 routes.get('/comics/get/:id', comicController.getComicByIds);
+
+/**
+ * @swagger
+ * /comics/getnames:
+ *  get:
+ *      tags:
+ *          - Comics
+ *      description: Pegar o nome de todas as comics do banco de dados
+ *      produces:
+ *          - application/json
+ *      responses:
+ *          200:
+ *              description: Títulos das comics
+ * 
+ */
+routes.get('/comics/getnames', comicController.getNameOffAllComics);
+
+
+/**
+ * @swagger
+ * /comics/create:
+ *  post:
+ *      tags:
+ *          - Comics
+ *      description: Popular banco com as Comics
+ *      produces:
+ *          - application/json
+ *      parameters:
+ *          - name: comic
+ *            description: Comic to be created
+ *            in: body
+ *            required: true
+ *            schema:
+ *              $ref: '#/components/schemas/Comic'
+ *      responses:
+ *          200:
+ *              description: Comic criada com sucesso
+ *          400:
+ *              description: |
+ *                  Solicitação inválida
+ *                  - Id da api já existente no banco de dados
+ *                  - Informações incompletas
+ */
+routes.post('/comics/create', comicController.create);
+
 
 /**
  * @swagger
@@ -182,15 +197,152 @@ routes.put('/comics/update', comicController.updateComicById);
  *              description: Não foi possível deletar a comic
  */
 routes.delete('/comics/delete', comicController.deleteComic);
-routes.get('/comics/getnames', comicController.getNameOffAllComics);
-routes.get('/comics/highestpages', comicController.getComicHighestNumberOfPages);
 
-routes.post('/creators/create', creatorController.create);
-routes.delete('/creators/delete', creatorController.delete);
-routes.put('/creators/update', creatorController.update);
+/**
+ * @swagger
+ * /creators/get/{id}:
+ *  get:
+ *      tags:
+ *          - Creators
+ *      description: Encontrar creator pelo id da api ou id do mongo
+ *      produces:
+ *          - application/json
+ *      parameters:
+ *          - in: path
+ *            name: id
+ *            required: true
+ *      responses:
+ *          200:
+ *              description: Creator encontrado
+ *          404:
+ *              description: Creator não encontrado
+ * 
+ */
 routes.get('/creators/get/:id', creatorController.getCreatorByIds);
+
+/**
+ * @swagger
+ * /creators/getall:
+ *  get:
+ *      tags:
+ *          - Creators
+ *      description: Buscar todos os creators do banco de dados
+ *      produces:
+ *          - application/json
+ *      responses:
+ *          200:
+ *              description: Creators encontrados
+ *          404:
+ *              description: Creators não encontrados
+ * 
+ */
 routes.get('/creators/getall', creatorController.getAllCreators);
+
+/**
+ * @swagger
+ * /creators/mostcreations:
+ *  get:
+ *      tags:
+ *          - Creators
+ *      description: Buscar creator com mais criações da saga. Caso tenha mais de um criador com o número máximo, ambos são reotrnados.
+ *      produces:
+ *          - application/json
+ *      responses:
+ *          200:
+ *              description: Creator com mais criações
+ *          404:
+ *              description: Creators não encontrados
+ *          500:
+ *              description: Erro interno do servidor
+ * 
+ */
 routes.get('/creators/mostcreations', creatorController.getCreatorWithTheMostCreations);
+
+/**
+ * @swagger
+ * /creators/create:
+ *  post:
+ *      tags:
+ *          - Creators
+ *      description: Criar um creator
+ *      produces:
+ *          - application/json
+ *      parameters:
+ *          - name: creator
+ *            description: Creator to be created
+ *            in: body
+ *            required: true
+ *            schema:
+ *              $ref: '#/components/schemas/Creator'
+ *      responses:
+ *          200:
+ *              description: Creator criado com sucesso
+ *          400:
+ *              description: Informações incompletas
+ *          409:
+ *              description: Creator api id já existe no banco de dados
+ *          500: 
+ *              description: Erro interno do servidor
+ */
+routes.post('/creators/create', creatorController.create);
+
+/**
+ * @swagger
+ * /creators/delete:
+ *  delete:
+ *      tags:
+ *          - Creators
+ *      description: Deletar um creator
+ *      produces:
+ *          - application/json
+ *      parameters:
+ *          - name: deletecreator
+ *            description: Id do Creator
+ *            in: body
+ *            required: true
+ *            schema:
+ *              $ref: '#/components/schemas/DeleteCreator'
+ *      responses:
+ *          200:
+ *              description: Creator deletado com sucesso
+ *          404:
+ *              description: Creator não encontrada
+ *          500:
+ *              description: Não foi possível deletar o creator
+ */
+routes.delete('/creators/delete', creatorController.delete);
+
+/**
+ * @swagger
+ * /creators/update:
+ *  put:
+ *      tags:
+ *          - Creators
+ *      description: Atualizar um creator
+ *      produces:
+ *          - application/json
+ *      parameters:
+ *          - name: updatecreator
+ *            description: Creator e campos a serem atualizados
+ *            in: body
+ *            required: true
+ *            schema:
+ *              $ref: '#/components/schemas/UpdateCreator'
+ *      responses:
+ *          200:
+ *              description: Creator atualizado com sucesso
+ *          400:
+ *              description: |
+ *                  Solicitação inválida
+ *                  - Creator não encontrado
+ *                  - Quando há detail, não pode ser vazio
+ *                  - Full Name não pode ser vazio
+ *          409:
+ *              description: O id da api do creator já está em uso
+ *          500:
+ *              description: Não foi possível atualizar o creator
+ */
+routes.put('/creators/update', creatorController.update);
 
 //routes.get('/characters/create/:id', characterController.create);
 routes.get('/characters/:id', characterController.getCharacterById)

@@ -17,7 +17,7 @@ class CreatorService {
         let creators = await this.marvelApi.getCreatorsByEvent(creatorId);
         console.log(creators)
 
-        if (creators) {
+        if (creators !== null) {
             creators.forEach(async (creator) => {
                 return this.repository.findByCreatorId(creator.id)
                     .then((res) => {
@@ -73,7 +73,7 @@ class CreatorService {
         } catch (error) {
             console.error(error);
             return new ServiceData(
-                HttpStatus.BAD_REQUEST
+                HttpStatus.INTERNAL_SERVER_ERROR
             )
         }
 
@@ -167,7 +167,7 @@ class CreatorService {
             .then((res) => {
                 if (res !== null) {
                     return new ServiceData(
-                        HttpStatus.FOUND,
+                        HttpStatus.OK,
                         Messages.CREATOR_FOUND,
                         res
                     )
@@ -191,7 +191,7 @@ class CreatorService {
             .then((res) => {
                 if (res !== null) {
                     return new ServiceData(
-                        HttpStatus.FOUND,
+                        HttpStatus.OK,
                         Messages.CREATORS_FOUND,
                         res
                     )
