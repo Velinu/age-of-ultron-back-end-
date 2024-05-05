@@ -148,7 +148,6 @@ export class ComicService {
         }
 
         if (updateComic.title !== undefined) {
-            console.log(updateComic.title.length)
             if (updateComic.title.length == 0) {
                 return new ServiceData(
                     HttpStatus.BAD_REQUEST,

@@ -15,7 +15,6 @@ class CreatorService {
 
     async createFromApi(creatorId: number) {
         let creators = await this.marvelApi.getCreatorsByEvent(creatorId);
-        console.log(creators)
 
         if (creators !== null) {
             creators.forEach(async (creator) => {
@@ -103,7 +102,6 @@ class CreatorService {
     }
 
     async updateCreator(updateCreator: UpdateCreatorDto) {
-        console.log(updateCreator);
         const creator = await this.repository.findByCreatorIds(updateCreator._id);
         if (creator == null) {
             return new ServiceData(

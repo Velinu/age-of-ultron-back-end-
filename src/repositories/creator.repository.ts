@@ -20,7 +20,6 @@ export class CreatorRepository extends GenericRepository<CreatorDocument> {
 
     async findByCreatorIds(id: string): Promise<CreatorInterface | null> {
         if (isNaN(Number(id))) {
-            console.log('taqui')
             return this.findOne({ _id: id })
                 .then((res) => {
                     return res;
