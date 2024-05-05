@@ -111,7 +111,7 @@ export class MarvelApi {
     }
 
     public async getCharactersByEvent(id: number) {
-        return fetch(this.generateApi(`events/${id}/characters`))
+        return fetch(this.generateApi(`events/${id}/characters`, 'limit=100'))
             .then(async (result: any) => {
                 const res = await result.json();
                 return res.code === 200 ? res.data.results : null;
@@ -123,7 +123,7 @@ export class MarvelApi {
     }
 
     public async getComicsByCharacter(id: number) {
-        return fetch(this.generateApi(`characters/${id}/comics`))
+        return fetch(this.generateApi(`characters/${id}/comics`, 'limit=100'))
             .then(async (result: any) => {
                 const res = await result.json();
                 return res.code === 200 ? res.data.results : null;
@@ -135,7 +135,7 @@ export class MarvelApi {
     }
 
     public async getCharacterById(id: number) {
-        return fetch(this.generateApi(`characters/${id}`))
+        return fetch(this.generateApi(`characters/${id}`, 'limit=100'))
             .then(async (result: any) => {
                 const res = await result.json();
                 return res.code === 200 ? res.data.results : null
@@ -147,7 +147,7 @@ export class MarvelApi {
     }
 
     public async getAllCharacters() {
-        return fetch(this.generateApi(`characters`))
+        return fetch(this.generateApi(`characters`, 'limit=100'))
             .then(async (result: any) => {
                 const res = await result.json();
                 return res.code === 200 ? res.data.results : null

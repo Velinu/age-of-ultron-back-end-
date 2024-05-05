@@ -26,4 +26,14 @@ export class CharacterRepository extends GenericRepository<CharacterDocument> {
                 return null;
             })
     }
+
+    async getAllCharacters() {
+        return this.find({})
+            .then((res) => {
+                return res;
+            })
+            .catch(() => {
+                return null;
+            })
+    }
 }

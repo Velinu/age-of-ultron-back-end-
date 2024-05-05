@@ -258,6 +258,7 @@ routes.get('/creators/getall', creatorController.getAllCreators);
  */
 routes.get('/creators/mostcreations', creatorController.getCreatorWithTheMostCreations);
 
+
 /**
  * @swagger
  * /creators/create:
@@ -342,18 +343,377 @@ routes.delete('/creators/delete', creatorController.delete);
  *          500:
  *              description: Não foi possível atualizar o creator
  */
+
 routes.put('/creators/update', creatorController.update);
 
-//routes.get('/characters/create/:id', characterController.create);
-routes.get('/characters/:id', characterController.getCharacterById)
-routes.get('/characters', characterController.getAllCharacters)
-routes.get('/characters/extra/mostComics', characterController.getMostComics)
-routes.get('/characters/extra/mostEvents', characterController.getMostEvents)
-routes.get('/characters/extra/mostSeries', characterController.getMostSeries)
-routes.post('/characters', characterController.postCharacter)
-routes.patch('/characters/:id', characterController.patchCharacter)
-routes.delete('/characters/:id', characterController.deleteCharacter)
+routes.get('/characters/create/:id', characterController.create)
+/**
+ * @swagger
+ * /characters/create/{eventId}:
+ *  get:
+ *      tags:
+ *          - Characters
+ *      description: Criar personagem por evento
+ *      produces:
+ *          - application/json
+ *      parameters:
+ *          - in: path
+ *            name: eventId
+ *            required: true
+ *      responses:
+ *          200:
+ *              description: Criar personagens de um evento
+ *          400:
+ *              description: eventId inválido ou não encontrado
+ * 
+ */
 
+routes.get('/characters/:id', characterController.getCharacterById)
+/**
+ * @swagger
+ * /characters/{charId}:
+ *  get:
+ *      tags:
+ *          - Characters
+ *      description: Buscar personagem por Id
+ *      produces:
+ *          - application/json
+ *      parameters:
+ *          - in: path
+ *            name: charId
+ *            required: true
+ *      responses:
+ *          200:
+ *              description: Encontra personagem por Id
+ *          400:
+ *              description: charId inválido ou não encontrado
+ * 
+ */
+
+routes.get('/characters', characterController.getAllCharacters)
+/**
+ * @swagger
+ *  /characters:
+ *  get:
+ *      tags:
+ *          - Characters
+ *      description: Buscar todos os personagens
+ *      produces:
+ *          - application/json
+ *      responses:
+ *          200:
+ *              description: Encontra todos os personagens
+ *          400:
+ *              description: Nenhum personagem encontrado
+ * 
+ */
+
+routes.get('/characters/extra/mostComics', characterController.getMostComics)
+/**
+ * @swagger
+ *  /characters/extra/mostComics:
+ *  get:
+ *      tags:
+ *          - Characters
+ *      description: Buscar personagem com mais Comics
+ *      produces:
+ *          - application/json
+ *      responses:
+ *          200:
+ *              description: Encontra personagem personagem com mais Comics
+ *          400:
+ *              description: Nenhum personagem encontrado
+ * 
+ */
+
+routes.get('/characters/extra/mostEvents', characterController.getMostEvents)
+/**
+ * @swagger
+ * /characters/extra/mostEvents:
+ *  get:
+ *      tags:
+ *          - Characters
+ *      description: Buscar personagem com mais eventos
+ *      produces:
+ *          - application/json
+ *      responses:
+ *          200:
+ *              description: Encontra personagem com mais eventos
+ *          400:
+ *              description: Nenhum personagem encontrado
+ * 
+ */
+
+routes.get('/characters/extra/mostSeries', characterController.getMostSeries)
+/**
+ * @swagger
+ *  /characters/extra/mostSeries:
+ *  get:
+ *      tags:
+ *          - Characters
+ *      description: Buscar personagem com mais Series
+ *      produces:
+ *          - application/json
+ *      responses:
+ *          200:
+ *              description: Encontra personagem personagem com mais Series
+ *          400:
+ *              description: Nenhum personagem encontrado
+ * 
+ */
+
+routes.post('/characters', characterController.postCharacter)
+/**
+ * @swagger
+ * /characters:
+ *  post:
+ *      tags:
+ *          - Characters
+ *      description: Criar um personagem
+ *      produces:
+ *          - application/json
+ *      parameters:
+ *          - in: "body"
+ *            name: "character"
+ *            description: "Informações do personagem a ser criado"
+ *            required: true
+ *            schema:
+ *              type: "object"
+ *              properties:
+ *                name:
+ *                  type: "string"
+ *                  description: "Nome do personagem"
+ *                description:
+ *                  type: "string"
+ *                  description: "Descrição do personagem"
+ *                modified:
+ *                  type: "string"
+ *                  format: "date-time"
+ *                  description: "Data de última modificação"
+ *                thumbnail:
+ *                  type: "object"
+ *                  properties:
+ *                    path:
+ *                      type: "string"
+ *                      description: "Caminho para a imagem do personagem"
+ *                    extension:
+ *                      type: "string"
+ *                      description: "Extensão da imagem"
+ *                comics:
+ *                  type: "object"
+ *                  properties:
+ *                    available:
+ *                      type: "integer"
+ *                      description: "Número de quadrinhos disponíveis"
+ *                    items:
+ *                      type: "array"
+ *                      items:
+ *                        type: "object"
+ *                        properties:
+ *                          title:
+ *                            type: "string"
+ *                            description: "Título do quadrinho"
+ *                series:
+ *                  type: "object"
+ *                  properties:
+ *                    available:
+ *                      type: "integer"
+ *                      description: "Número de séries disponíveis"
+ *                    items:
+ *                      type: "array"
+ *                      items:
+ *                        type: "object"
+ *                        properties:
+ *                          name:
+ *                            type: "string"
+ *                            description: "Nome da série"
+ *                stories:
+ *                  type: "object"
+ *                  properties:
+ *                    available:
+ *                      type: "integer"
+ *                      description: "Número de histórias disponíveis"
+ *                    items:
+ *                      type: "array"
+ *                      items:
+ *                        type: "object"
+ *                        properties:
+ *                          name:
+ *                            type: "string"
+ *                            description: "Nome da história"
+ *                          type:
+ *                            type: "string"
+ *                            description: "Tipo da história"
+ *                events:
+ *                  type: "object"
+ *                  properties:
+ *                    available:
+ *                      type: "integer"
+ *                      description: "Número de eventos disponíveis"
+ *                    items:
+ *                      type: "array"
+ *                      items:
+ *                        type: "object"
+ *                        properties:
+ *                          name:
+ *                            type: "string"
+ *                            description: "Nome do evento"
+ *                urls:
+ *                  type: "array"
+ *                  items:
+ *                    type: "object"
+ *                    properties:
+ *                      type:
+ *                        type: "string"
+ *                        description: "Tipo de URL"
+ *                      url:
+ *                        type: "string"
+ *                        description: "Endereço da URL"
+ *      responses:
+ *          200:
+ *              description: Personagem criado com sucesso
+ *          400:
+ *              description: Não foi possível criar o personagem
+ * 
+ */
+routes.patch('/characters/:id', characterController.patchCharacter)
+/**
+ * @swagger
+ * /characters/{charId}:
+ *  patch:
+ *      tags:
+ *          - Characters
+ *      description: Edita um personagem
+ *      produces:
+ *          - application/json
+ *      parameters:
+ *          - in: path
+ *            name: charId
+ *            required: true
+ *          - in: "body"
+ *            name: "character"
+ *            description: "Informações do personagem a ser editado"
+ *            required: true
+ *            schema:
+ *              type: "object"
+ *              properties:
+ *                name:
+ *                  type: "string"
+ *                  description: "Nome do personagem"
+ *                description:
+ *                  type: "string"
+ *                  description: "Descrição do personagem"
+ *                modified:
+ *                  type: "string"
+ *                  format: "date-time"
+ *                  description: "Data de última modificação"
+ *                thumbnail:
+ *                  type: "object"
+ *                  properties:
+ *                    path:
+ *                      type: "string"
+ *                      description: "Caminho para a imagem do personagem"
+ *                    extension:
+ *                      type: "string"
+ *                      description: "Extensão da imagem"
+ *                comics:
+ *                  type: "object"
+ *                  properties:
+ *                    available:
+ *                      type: "integer"
+ *                      description: "Número de quadrinhos disponíveis"
+ *                    items:
+ *                      type: "array"
+ *                      items:
+ *                        type: "object"
+ *                        properties:
+ *                          title:
+ *                            type: "string"
+ *                            description: "Título do quadrinho"
+ *                series:
+ *                  type: "object"
+ *                  properties:
+ *                    available:
+ *                      type: "integer"
+ *                      description: "Número de séries disponíveis"
+ *                    items:
+ *                      type: "array"
+ *                      items:
+ *                        type: "object"
+ *                        properties:
+ *                          name:
+ *                            type: "string"
+ *                            description: "Nome da série"
+ *                stories:
+ *                  type: "object"
+ *                  properties:
+ *                    available:
+ *                      type: "integer"
+ *                      description: "Número de histórias disponíveis"
+ *                    items:
+ *                      type: "array"
+ *                      items:
+ *                        type: "object"
+ *                        properties:
+ *                          name:
+ *                            type: "string"
+ *                            description: "Nome da história"
+ *                          type:
+ *                            type: "string"
+ *                            description: "Tipo da história"
+ *                events:
+ *                  type: "object"
+ *                  properties:
+ *                    available:
+ *                      type: "integer"
+ *                      description: "Número de eventos disponíveis"
+ *                    items:
+ *                      type: "array"
+ *                      items:
+ *                        type: "object"
+ *                        properties:
+ *                          name:
+ *                            type: "string"
+ *                            description: "Nome do evento"
+ *                urls:
+ *                  type: "array"
+ *                  items:
+ *                    type: "object"
+ *                    properties:
+ *                      type:
+ *                        type: "string"
+ *                        description: "Tipo de URL"
+ *                      url:
+ *                        type: "string"
+ *                        description: "Endereço da URL"
+ *      responses:
+ *          200:
+ *              description: Personagem criado com sucesso
+ *          400:
+ *              description: Não foi possível editar o personagem
+ * 
+ */
+
+routes.delete('/characters/:id', characterController.deleteCharacter)
+/**
+ * @swagger
+ * /characters/{charId}:
+ *  delete:
+ *      tags:
+ *          - Characters
+ *      description: Excluir um personagem
+ *      produces:
+ *          - application/json
+ *      parameters:
+ *          - in: path
+ *            name: charId
+ *            required: true
+ *      responses:
+ *          200:
+ *              description: Exluir um personagem
+ *          400:
+ *              description: charId inválido ou não encontrado
+ * */
 export {
     routes
 }
