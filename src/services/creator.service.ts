@@ -9,9 +9,17 @@ import { MarvelApi } from "../useApi/marvel.useapi";
 import { ServiceData } from "../utils/service-data";
 import { CreatorInterface } from "../interfaces/creator.interface";
 
-class CreatorService {
-    private readonly repository = new CreatorRepository();
-    private marvelApi = new MarvelApi();
+export class CreatorService {
+    private readonly repository;
+    private marvelApi;
+
+    constructor(
+        repository: CreatorRepository,
+        marvelApi: MarvelApi
+    ) {
+        this.repository = repository;
+        this.marvelApi = marvelApi;
+    }
 
     async createFromApi(creatorId: number) {
         let creators = await this.marvelApi.getCreatorsByEvent(creatorId);
@@ -257,4 +265,4 @@ class CreatorService {
     }
 }
 
-export default new CreatorService();
+export default new CreatorService(new CreatorRepository, new MarvelApi);
