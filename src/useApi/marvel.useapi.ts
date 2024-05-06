@@ -1,10 +1,6 @@
 import { ComicClass } from "../classes/comic.class";
 import { CreatorClass } from "../classes/creator.class";
-import { Id } from "../classes/id.class";
-import { CreatorInterface } from "../interfaces/creator.interface";
-import { Storie } from "../interfaces/stories.interface";
 import { Md5 } from "../utils/md5";
-import { Messages } from "../enums/messages.enum";
 import { ComicFullClass } from "../classes/comic-full.class";
 import { ComicsClass } from "../classes/comics.class";
 

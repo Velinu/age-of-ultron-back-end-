@@ -340,6 +340,37 @@ describe('ComicService', () => {
         expect(result.statusCode).toBe(HttpStatus.BAD_REQUEST);
     })
 
+    it('Should do not update creator if id already exists', async () => {
+        const creatorExists: any = {
+            "_id": 'fj343',
+            "id": 34,
+            "fullName": "Creator Full Name",
+            "comics": {
+                "available": 1,
+                "comic": [
+                    {
+                        "id": 234,
+                        "name": "Comic Name"
+                    }
+                ]
+            },
+            "series": 200,
+            "stories": 145,
+            "events": 4,
+            "detailUrl": 'detail.com',
+            "createdAt": new Date(),
+            "updatedAt": new Date(),
+        }
+
+        let update: any = true
+        jest.spyOn(mockCreatorRepository, 'findByCreatorIds').mockReturnValueOnce(Promise.resolve(creatorExists))
+        jest.spyOn(mockCreatorRepository, 'findByCreatorIds').mockReturnValueOnce(Promise.resolve(creatorExists))
+
+        const result = await service.updateCreator(creatorExists);
+
+        expect(result.statusCode).toBe(HttpStatus.CONFLICT);
+    })
+
 
 
 });

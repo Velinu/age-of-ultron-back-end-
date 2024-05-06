@@ -1,13 +1,9 @@
 import { Router } from 'express'
-import eventController from '../controllers/event.controller'
 import creatorController from '../controllers/creator.controller';
-import storieController from '../controllers/storie.controller';
 import comicController from '../controllers/comic.controller';
 import characterController from '../controllers/character.controller';
 
 const routes = Router();
-
-routes.get('/events/create/:event', eventController.create);
 
 /**
  * @swagger
